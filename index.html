@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Background Parallax Video</title>
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <div id="video-wrap" class="video-wrap">
+      <video preload="metadata" autoplay loop id="my-video">
+        <source src="videos/sample.mp4" type="video/mp4">
+        <source src="videos/sample.webm" type="video/webm">
+      </video>
+    </div>
+  </main>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="backgroundVideo.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#my-video').backgroundVideo();
+    });
+  </script>
+</body>
+</html>
