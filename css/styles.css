@@ -4,11 +4,11 @@ main {
   height: 2200px;
 }
 
-.video-wrap {
+.bv-video-wrap {
   width: 100%;
 }
 
-.video-wrap::before {
+.bv-video-wrap::before {
   content: '';
   position: absolute;
   height: 100%;
@@ -21,7 +21,8 @@ main {
   z-index: 10;
 }
 
-.video-wrap video {
+/* Video object */
+.bv-video {
   width: 100%;
   height: 100%;
 }
