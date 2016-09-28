@@ -1,7 +1,7 @@
 backgroundVideo
 ============
 ## About
-**2016-09-25: I am currently updating this package. I will be removing the jQuery dependancy and improving the code for the whole plugin. I will also attempt to address the few issues raised**
+**2016-09-25: I am currently updating this package. I will be removing the jQuery dependancy and improving the code for the whole plugin. I will also attempt to address the few issues raised. See [2.0.0](https://github.com/linnett/backgroundVideo/tree/2.0.0) for progress.**
 
 ### What is backgroundVideo?
 backgroundVideo makes your HTML5 `<video>` behave like the CSS property `background-size: cover`, making it fully responsive and scaling to aspect ratio. Also included is an optional hardware accelerated parallax effect on the video. If you would like the parallax effect to behave like `background-attachment: fixed` instead of parallax, you can set `parallaxOptions.effect: 1`.
