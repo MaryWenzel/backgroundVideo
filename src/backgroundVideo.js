@@ -113,7 +113,7 @@
 
       // Set original video height and width for resize and initial calculations
       this.options.originalVideoW = this.el.videoWidth;
-      this.options.originalVideoH = this.el.videoWidth;
+      this.options.originalVideoH = this.el.videoHeight;
 
       // Bind events for scroll, reize and parallax
       this.bindEvents();
@@ -173,6 +173,8 @@
       const widthScale = windowHeight / this.options.originalVideoH;
       let scaleFactor;
 
+      console.log(heightScale, widthScale)
+
       this.options.bvVideoWrap.style.width = `${windowWidth}px`;
       this.options.bvVideoWrap.style.height = `${windowHeight}px`;
 
@@ -184,6 +186,7 @@
 
       const videoWidth = scaleFactor * this.options.originalVideoW;
       const videoHeight = scaleFactor * this.options.originalVideoH;
+
 
       this.el.style.width = `${videoWidth}px`;
       this.el.style.height = `${videoHeight}px`;
