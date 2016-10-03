@@ -23,8 +23,8 @@ HTML5 video supported browsers on desktop:
 ## How to use
 
 For the most basic implementation, add the following to your `html` document:
-```
-<video id="bv-video"></video>
+```html
+<video class="bv-video"></video>
 ```
 
 Ensuring that you are referencing the `backgroundVideo.js` file in your project, you can then instantiate the plugin by using the following Javascript:
