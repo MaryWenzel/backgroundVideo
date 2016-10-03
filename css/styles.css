@@ -1,14 +1,20 @@
 main {
   position: relative;
-  background: #fff;
-  height: 2200px;
 }
 
+/* Video wrap */
 .bv-video-wrap {
   width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.bv-video-wrap--ready {
+  display: block;
 }
 
 .bv-video-wrap::before {
+  /* Optional overlay */
   content: '';
   position: absolute;
   height: 100%;
@@ -25,23 +31,4 @@ main {
 .bv-video {
   width: 100%;
   height: 100%;
-}
-
-.content-overlay {
-  position: absolute;
-  height: 200px;
-  width: 200px;
-  bottom: 0;
-  top: 0;
-  right: 0;
-  left: 0;
-  margin: auto;
-  z-index: 100;
-  padding: 50px 0;
-}
-
-.content-overlay h1,
-.content-overlay p {
-  text-align: center;
-  color: #fff;
 }

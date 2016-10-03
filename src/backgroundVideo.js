@@ -1,11 +1,13 @@
 /*!
  * backgroundVideo v2.0.0
  * https://github.com/linnett/backgroundVideo
- * Use HTML5 video to create an effect like the CSS property, 'background-size: cover'. Includes parallax option.
+ * Use HTML5 video to create an effect like the CSS property,
+ * 'background-size: cover'. Includes parallax option.
  *
  * Copyright 2016 Sam Linnett <linnettsam@gmail.com>
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
  */
+'use strict';
 
 (function(root, factory) {
   const pluginName = 'BackgroundVideo';
@@ -17,9 +19,7 @@
   } else {
     root[pluginName] = factory(pluginName);
   }
-}(this, function(pluginName) {
-  'use strict';
-
+}((window || module || {}), function(pluginName) {
   /**
    * Default options
    */
@@ -29,7 +29,11 @@
     },
     pauseVideoOnViewLoss: false,
     preventContextMenu: false,
-    minimumVideoWidth: 400
+    minimumVideoWidth: 400,
+
+    // Callback functions
+    onBeforeReady: function() {},
+    onReady: function() {}
   };
 
   /**
@@ -49,7 +53,7 @@
    *
    * BackgroundVideo class
    */
-  class Plugin {
+  class BackgroundVideo {
     /**
      * Class constructor method
      *
@@ -67,7 +71,6 @@
       // Detect 3d transforms
       this.options.has3d = this.detect3d();
       // Loop through each video and init
-
       for(let i = 0; i < this.element.length; i++) {
         this.init(this.element[i], i);
       }
@@ -88,17 +91,22 @@
       this.setVideoProperties()
       this.insertVideos();
 
-      // Add event listener to detect when the video can play through
-      this.el.addEventListener('canplaythrough', this.playEvent, false);
+      // Trigger beforeReady() event
+      if (this.options && this.options.onBeforeReady()) this.options.onBeforeReady();
+
       // If video is cached, the video will already be ready so
       // canplay/canplaythrough event will not fire.
       if (this.el.readyState > 3) {
         this.videoReadyCallback();
-      };
+      } else {
+        // Add event listener to detect when the video can play through
+        this.el.addEventListener('canplaythrough', this.playEvent, false);
+        this.el.addEventListener('canplay', this.playEvent, false);
+      }
 
       // Prevent context menu on right click for object
       if (this.options.preventContextMenu) {
-        // this.el.addEventListener('contextmenu', () => return false);
+        this.el.addEventListener('contextmenu', () => false);
       }
     }
 
@@ -110,6 +118,7 @@
     videoReadyCallback() {
       // Prevent event from being repeatedly called
       this.el.removeEventListener('canplaythrough', this.playEvent, false);
+      this.el.removeEventListener('canplay', this.playEvent, false);
 
       // Set original video height and width for resize and initial calculations
       this.options.originalVideoW = this.el.videoWidth;
@@ -119,8 +128,15 @@
       this.bindEvents();
       // Request first tick
       this.requestTick();
+      // Trigger onReady() event
+      if (this.options && this.options.onReady()) this.options.onReady();
     }
 
+    /**
+     * Bind class events
+     *
+     * @method bindEvents
+     */
     bindEvents() {
       this.ticking = false;
 
@@ -131,18 +147,24 @@
       window.addEventListener('resize', this.requestTick.bind(this));
     }
 
-    updatePosition() {
-      this.positionObject();
+    /**
+     * When the user scrolls, check if !ticking and requestAnimationFrame
+     *
+     * @method bindEvents
+     */
+    requestTick() {
+      if (!this.ticking) {
+        this.ticking = true;
+        window.requestAnimationFrame(this.positionObject.bind(this));
+      }
       this.ticking = false;
     }
 
-    requestTick() {
-      if (!this.ticking) {
-        window.requestAnimationFrame(this.updatePosition.bind(this));
-        this.ticking = true;
-      }
-    }
-
+    /**
+     * Position the video and apply transform styles
+     *
+     * @method positionObject
+     */
     positionObject() {
       const scrollPos = window.pageYOffset;
       let {xPos, yPos} = this.scaleObject();
@@ -159,13 +181,19 @@
         yPos = -yPos;
       }
 
-      const transformStyle = (this.options.has3d) ? `translate3d(-${xPos}px, ${yPos}px, 0)` : `translate(-${xPos}px, ${yPos}px)`;
+      const transformStyle = (this.options.has3d) ? `translate3d(${xPos}px, ${yPos}px, 0)` : `translate(${xPos}px, ${yPos}px)`;
       // Style with prefix
-      this.el.style[`${this.options.browserPrexix}transform`] = transformStyle;
+      this.el.style[`${this.options.browserPrexix}`] = transformStyle;
       // Style without prefix
       this.el.style.transform = transformStyle;
     }
 
+    /**
+     * Scale video and wrapper, ensures video stays central and maintains aspect
+     * ratio
+     *
+     * @method scaleObject
+     */
     scaleObject() {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
@@ -173,35 +201,31 @@
       const widthScale = windowHeight / this.options.originalVideoH;
       let scaleFactor;
 
-      console.log(heightScale, widthScale)
-
       this.options.bvVideoWrap.style.width = `${windowWidth}px`;
       this.options.bvVideoWrap.style.height = `${windowHeight}px`;
 
       scaleFactor = heightScale > widthScale ? heightScale : widthScale;
 
       if (scaleFactor * this.options.originalVideoW < this.options.minimumVideoWidth) {
-       scaleFactor = this.options.minimumVideoWidth / this.options.originalVideoW;
+        scaleFactor = this.options.minimumVideoWidth / this.options.originalVideoW;
       }
 
       const videoWidth = scaleFactor * this.options.originalVideoW;
       const videoHeight = scaleFactor * this.options.originalVideoH;
 
-
       this.el.style.width = `${videoWidth}px`;
       this.el.style.height = `${videoHeight}px`;
 
       return {
-       // Return x and y axis values for positioning
-       xPos: -(parseInt(this.el.style.width - windowWidth / 2)),
-       yPos: parseInt(this.el.style.height - windowHeight) / 2
-      };
+        xPos: -(parseInt((videoWidth - windowWidth) / 2)),
+        yPos: parseInt(videoHeight - windowHeight) / 2
+      }
     }
 
     calculateYPos(yPos, scrollPos) {
       const videoPosition = parseInt(this.options.bvVideoWrap.offsetTop);
       const videoOffset = videoPosition - scrollPos;
-      console.log(scrollPos);
+
       yPos = -((videoOffset / this.options.parallax.effect) + yPos);
 
       return yPos;
@@ -211,12 +235,13 @@
      * Create a container around the video tag
      *
      * @method setVideoWrap
+     * @params {number} - iteration of video
      */
     setVideoWrap(iteration) {
       const wrapper = document.createElement('div');
 
       // Set video wrap class for later use in calculations
-      this.options.bvVideoWrapClass = `bv-video-wrap-${iteration}`;
+      this.options.bvVideoWrapClass = `${this.el.className}-wrap-${iteration}`;
 
       addClass(wrapper, 'bv-video-wrap');
       addClass(wrapper, this.options.bvVideoWrapClass);
@@ -285,13 +310,13 @@
       let browserPrexix;
 
       if (val.indexOf('chrome') > -1 || val.indexOf('safari') > -1) {
-        browserPrexix = '-webkit-';
+        browserPrexix = 'webkitTransform';
       } else if (val.indexOf('firefox') > -1) {
-        browserPrexix = '-moz-';
+        browserPrexix = 'MozTransform';
       } else if (val.indexOf('MSIE') !== -1 || val.indexOf('Trident/') > 0) {
-        browserPrexix = '-ms-';
+        browserPrexix = 'msTransform';
       } else if (val.indexOf('Opera') > -1) {
-        browserPrexix = '-o-';
+        browserPrexix = 'OTransform';
       }
 
       return browserPrexix;
@@ -364,24 +389,5 @@
 
   }
 
-
-  // Add lightweight jQuery wrapper, if available
-  if (window.jQuery) {
-    const $ = window.jQuery;
-
-    $.fn[pluginName] = function(options) {
-      options = options || {};
-
-      return this.each(function() {
-        // add plugin to element data
-        if (!$.data(this, 'plugin_' + pluginName)) {
-          options.element = this;
-          $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
-        }
-      });
-    };
-  }
-
-
-  return Plugin;
+  return BackgroundVideo;
 }));
