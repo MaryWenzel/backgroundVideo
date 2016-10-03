@@ -51,14 +51,11 @@ Please see the examples for how to use the callback options and multiple videos 
 ## Options
 
 Option | Type | Default | Description
------- | ---- | ------- | -----------
-$videoWrap | jQuery object | $('#video-wrap') | The div that wraps around the video
-$outerWrap | jQuery object | $(window) | The containing div where outer measurements are taken
-minimumVideoWidth | number | 400 | Minimum width of the video for scaling purposes
+------ | ---- | ------- | ----------
+parallax.effect | number | 1.5 | The intensity of the parallax effect (1: fixed). Number must be >= 1.
 preventContextMenu | boolean | false | Prevents the user from viewing the context menu on the video (prevent right-click/secondary-click)
-parallax.effect: { effect: 1.5 } | number | 1.5 | The intensity of the parallax effect (1: fixed). Number must be >= 1.
-onBeforeReady | callback | null | Run code before the video is ready
-onReady | callback | null | Run code when the plugin has loaded - e.g. prevent loading flickers (see `examples` folder for useage)
+onBeforeReady() | callback | null | Run code before the video is ready
+onReady() | callback | null | Run code when the plugin has loaded - e.g. prevent loading flickers (see `examples` folder for useage)
 
 
 ## Dependencies
