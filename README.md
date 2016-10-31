@@ -1,4 +1,4 @@
-backgroundVideo - v2.0.0
+backgroundVideo - v2.0.1
 ============
 ## About
 
