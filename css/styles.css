@@ -6,6 +6,8 @@ main {
 .bv-video-wrap {
   width: 100%;
   height: 100%;
+  /* Please note this is only required if you with to add the
+  '.bv-video-wrap--ready' class on the 'onReady' event */
   display: none;
 }
 

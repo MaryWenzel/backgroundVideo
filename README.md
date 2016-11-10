@@ -1,4 +1,4 @@
-backgroundVideo - v2.0.1
+backgroundVideo - v2.0.2
 ============
 ## About
 
@@ -46,7 +46,7 @@ You can also install and use via npm:
 npm install background-video
 ```
 
-Please see the examples for how to use the callback options and multiple videos on one page.
+Please see the examples for how to use the callback options and multiple videos on one page (Note: The examples are written in ES6/ES2015 so these will not work in older browsers e.g. Internet Explorer).
 
 ## Options
 

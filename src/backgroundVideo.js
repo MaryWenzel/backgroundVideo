@@ -1,5 +1,5 @@
 /*!
- * backgroundVideo v2.0.1
+ * backgroundVideo v2.0.2
  * https://github.com/linnett/backgroundVideo
  * Use HTML5 video to create an effect like the CSS property,
  * 'background-size: cover'. Includes parallax option.
@@ -70,6 +70,8 @@
       this.shimRequestAnimationFrame();
       // Detect 3d transforms
       this.options.has3d = this.detect3d();
+      // Set window dimensions
+      this.setWindowDimensions();
       // Loop through each video and init
       for(let i = 0; i < this.element.length; i++) {
         this.init(this.element[i], i);
@@ -145,6 +147,17 @@
       }
 
       window.addEventListener('resize', this.requestTick.bind(this));
+      window.addEventListener('resize', this.setWindowDimensions.bind(this));
+    }
+
+    /**
+     * Set window width/height accessible within the class
+     *
+     * @method setWindowDimensions
+     */
+    setWindowDimensions() {
+      this.windowWidth = window.innerWidth;
+      this.windowHeight = window.innerHeight;
     }
 
     /**
@@ -157,7 +170,6 @@
         this.ticking = true;
         window.requestAnimationFrame(this.positionObject.bind(this));
       }
-      this.ticking = false;
     }
 
     /**
@@ -186,6 +198,8 @@
       this.el.style[`${this.options.browserPrexix}`] = transformStyle;
       // Style without prefix
       this.el.style.transform = transformStyle;
+
+      this.ticking = false;
     }
 
     /**
@@ -195,14 +209,12 @@
      * @method scaleObject
      */
     scaleObject() {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      const heightScale = windowWidth / this.options.originalVideoW;
-      const widthScale = windowHeight / this.options.originalVideoH;
+      const heightScale = this.windowWidth / this.options.originalVideoW;
+      const widthScale = this.windowHeight / this.options.originalVideoH;
       let scaleFactor;
 
-      this.options.bvVideoWrap.style.width = `${windowWidth}px`;
-      this.options.bvVideoWrap.style.height = `${windowHeight}px`;
+      this.options.bvVideoWrap.style.width = `${this.windowWidth}px`;
+      this.options.bvVideoWrap.style.height = `${this.windowHeight}px`;
 
       scaleFactor = heightScale > widthScale ? heightScale : widthScale;
 
@@ -217,8 +229,8 @@
       this.el.style.height = `${videoHeight}px`;
 
       return {
-        xPos: -(parseInt((videoWidth - windowWidth) / 2)),
-        yPos: parseInt(videoHeight - windowHeight) / 2
+        xPos: -(parseInt((videoWidth - this.windowWidth) / 2)),
+        yPos: parseInt(videoHeight - this.windowHeight) / 2
       }
     }
 
