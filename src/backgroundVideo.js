@@ -30,6 +30,7 @@
     pauseVideoOnViewLoss: false,
     preventContextMenu: false,
     minimumVideoWidth: 400,
+    autoplayFallback: '',
 
     // Callback functions
     onBeforeReady: function() {},
@@ -280,6 +281,11 @@
       this.el.setAttribute('autoplay', 'true');
       this.el.style.position = 'absolute';
       this.el.style.zIndex = '1';
+
+      var poster = this.options.autoplayFallback;
+      if(poster){
+        this.el.setAttribute('poster', poster);
+      }
     }
 
     /**

@@ -52,11 +52,11 @@ Please see the examples for how to use the callback options and multiple videos 
 
 Option | Type | Default | Description
 ------ | ---- | ------- | ----------
-parallax.effect | number | 1.5 | The intensity of the parallax effect (1: fixed). Number must be >= 1.
+parallax.effect | number | 1.5 | The intensity of the parallax effect (1: fixed). Number must be >= 1
 preventContextMenu | boolean | false | Prevents the user from viewing the context menu on the video (prevent right-click/secondary-click)
+autoplayFallback | string | '' | The poster image to show when auto-play capabilities are not available
 onBeforeReady() | callback | null | Run code before the video is ready
 onReady() | callback | null | Run code when the plugin has loaded - e.g. prevent loading flickers (see `examples` folder for useage)
-
 
 ## Dependencies
 
