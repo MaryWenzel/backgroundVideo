@@ -1,3 +1,5 @@
+**PLEASE NOTE: My apologies but this repo is not currently maintianed by myself due to time constraints. I will happily accept and review PR's if anyone has any bug fixes or improvements (e.g. making it work with React).**
+
 backgroundVideo - v2.0.3
 ============
 ## About
